@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3003:3003"
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend/
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    working_dir: /var/www
+    volumes:
+      - ./app-backend:/var/www
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+      - db
+
+  database:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+    ports:
+      - "3006:3306"
+    networks:
+      - db
+
+networks:
+  app-network:
+    driver: bridge
+  db:
