@@ -8,6 +8,8 @@ class TestController extends Controller
 {
     public function index()
     {
+        $param = '';
+
         return response([
             [
                 'id' => 1,
