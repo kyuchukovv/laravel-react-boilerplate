@@ -6,7 +6,7 @@ services:
     ports:
       - "3003:3003"
     networks:
-      - app-network
+      - network
 
   backend:
     build:
@@ -19,11 +19,11 @@ services:
       MYSQL_USER: ${DB_USERNAME}
     working_dir: /var/www
     volumes:
-      - ./app-backend:/var/www
+      - ./backend:/var/www
     ports:
       - "8000:8000"
     networks:
-      - app-network
+      - network
       - db
 
   database:
@@ -42,6 +42,6 @@ services:
       - db
 
 networks:
-  app-network:
+  network:
     driver: bridge
   db:
